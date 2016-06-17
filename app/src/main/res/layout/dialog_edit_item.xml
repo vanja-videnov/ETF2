@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackgroundGray">
+    <EditText
+        android:id="@+id/editName"
+        android:inputType="textEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:hint="name"
+        android:textColorHint="#ffffff"
+        android:textColor="#ffffff"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+    <EditText
+        android:id="@+id/editPrice"
+        android:inputType="textEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="price"
+        android:textColorHint="#ffffff"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/editName"
+        android:layout_alignLeft="@+id/editName"
+        android:layout_alignStart="@+id/editName" />
+    <EditText
+        android:id="@+id/editDescription"
+        android:inputType="text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="description"
+        android:textColorHint="#ffffff"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/editPrice"
+        android:layout_alignRight="@+id/editPrice"
+        android:layout_alignEnd="@+id/editPrice" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="delete"
+            android:id="@+id/buttonDeleteCategory"
+            android:background="@color/colorButtonGray"
+            android:textColor="#ffffff"
+            android:layout_below="@+id/editDescription"
+            android:layout_alignRight="@+id/editName"
+            android:layout_alignEnd="@+id/editName" />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SAVE"
+        android:id="@+id/buttonSaveCategory"
+        android:background="@color/colorButtonGray"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/editDescription"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>

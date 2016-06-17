@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ETF2</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="reports_array">
+        <item>Per day</item>
+        <item>Per user</item>
+        <item>Per table</item>
+    </string-array>
+    <string-array name="tables_array">
+        <item>table 1</item>
+        <item>table 2</item>
+        <item>table 3</item>
+        <item>table 4</item>
+        <item>table 5</item>
+        <item>table 6</item>
+    </string-array>
+</resources>
