@@ -20,7 +20,7 @@ public class OrderCursorAdapter extends CursorAdapter {
     // you don't bind any data to the view at this point.
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.category_item, parent, false);
+        return LayoutInflater.from(context).inflate(R.layout.item_item, parent, false);
     }
 
     // The bindView method is used to bind all data to a given view
@@ -28,11 +28,14 @@ public class OrderCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         // Find fields to populate in inflated template
-        TextView tvBody = (TextView) view.findViewById(R.id.category_name);
+        TextView tvBody = (TextView) view.findViewById(R.id.item_name);
+        TextView tvBody2 = (TextView) view.findViewById(R.id.item_price);
         // Extract properties from cursor
         String body = cursor.getString(cursor.getColumnIndexOrThrow("item"));
+        String body2 = cursor.getString(cursor.getColumnIndexOrThrow("quantity"));
         // Populate fields with extracted properties
         tvBody.setText(body);
+        tvBody2.setText(body2);
     }
 
 }
