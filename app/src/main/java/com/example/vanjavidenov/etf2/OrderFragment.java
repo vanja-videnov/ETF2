@@ -1,8 +1,10 @@
 package com.example.vanjavidenov.etf2;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -24,11 +26,13 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.vanjavidenov.etf2.UserContract.UserEntry;
+import com.example.vanjavidenov.etf2.resources.Order;
 import com.example.vanjavidenov.etf2.resources.User;
 
 public class OrderFragment extends Fragment {
     Context con;
     UserReaderDbHelper mDbHelper;
+    OrderReaderDbHelper oDbHelper;
     SQLiteDatabase db;
     public ListView lvItems;
     public static User user;
@@ -55,7 +59,8 @@ public class OrderFragment extends Fragment {
 
         con = getContext();
         mDbHelper = new UserReaderDbHelper(con);
-        db = mDbHelper.getReadableDatabase();
+        oDbHelper = new OrderReaderDbHelper(con);
+        db = oDbHelper.getReadableDatabase();
 
     }
 
@@ -77,6 +82,25 @@ public class OrderFragment extends Fragment {
                 intent.putExtra("table", pos+1);
                 startActivity(intent);
             }});
+        lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                AlertDialog.Builder adb = new AlertDialog.Builder(con);
+                adb.setTitle("PAY?");
+                final int tableIdToRemove = pos+1;
+                adb.setMessage("Are you sure you want to pay table " + tableIdToRemove);
+
+                adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String string = String.valueOf(tableIdToRemove);
+                        db.execSQL("DELETE FROM " + OrderContract.OrderEntry.TABLE_NAME + " WHERE tableNumber = '" + string + "'");
+                    }
+                });
+                adb.show();
+                return true;
+            }
+        });
         return rootView;
     }
 }

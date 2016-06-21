@@ -44,6 +44,7 @@ public class TableActivity extends AppCompatActivity {
     int choose;
     int table;
     Cursor c;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ public class TableActivity extends AppCompatActivity {
         db = oDbHelper.getReadableDatabase();
         table = getIntent().getIntExtra("table", 1);
         TextView tn = (TextView) findViewById(R.id.tableNumber);
-        tn.setText("table "+String.valueOf(table));
+        tn.setText("table " + String.valueOf(table));
         fab = (FloatingActionButton) findViewById(R.id.fab);
         choose = 1;
         c = itemsPerTable();
@@ -65,69 +66,100 @@ public class TableActivity extends AppCompatActivity {
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    final long itemId = l;
-                    final Dialog d = new Dialog(con);
+                final long itemId = l;
+                final Dialog d = new Dialog(con);
 
-                    d.setContentView(R.layout.dialog_edit_item);
-                    d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                    d.setTitle(Html.fromHtml("<background color='#ffffff'>Edit item</font>"));
-                    d.setCancelable(true);
-                    order = getOrder(l);
+                d.setContentView(R.layout.dialog_edit_item);
+                d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
+                d.setTitle(Html.fromHtml("<background color='#ffffff'>Edit item</font>"));
+                d.setCancelable(true);
+                order = getOrder(l);
                 item = getItemByName(order.getItem());
                 db = oDbHelper.getReadableDatabase();
-                    final CharSequence catName = order.getItem();
-                    final CharSequence catPrice = order.getSum();
+                final CharSequence catName = order.getItem();
+                final CharSequence catPrice = order.getSum();
 
-                    final EditText edit = (EditText) d.findViewById(R.id.editName);
-                    final EditText editp = (EditText) d.findViewById(R.id.editPrice);
-                    final EditText editpd = (EditText) d.findViewById(R.id.editDescription);
+                final EditText edit = (EditText) d.findViewById(R.id.editName);
+                final EditText editp = (EditText) d.findViewById(R.id.editPrice);
+                final EditText editpd = (EditText) d.findViewById(R.id.editDescription);
 
                 edit.setFocusable(false);
                 editp.setFocusable(false);
-                    edit.setText(catName);
-                    editp.setText(catPrice);
-                    editpd.setVisibility(View.INVISIBLE);
-                    Button bs = (Button) d.findViewById(R.id.buttonSaveCategory);
-                    bs.setVisibility(View.INVISIBLE);
+                edit.setText(catName);
+                editp.setText(catPrice);
+                editpd.setVisibility(View.INVISIBLE);
+                Button bs = (Button) d.findViewById(R.id.buttonSaveCategory);
+                bs.setText("PAY");
+//                    bs.setVisibility(View.INVISIBLE);
+                bs.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final long catIdToRemove = itemId;
+                        String string = String.valueOf(catIdToRemove);
 
-                    Button bd = (Button) d.findViewById(R.id.buttonDeleteCategory);
-                    bd.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            AlertDialog.Builder adb=new AlertDialog.Builder(con);
-                            adb.setTitle("Delete?");
-                            adb.setMessage("Are you sure you want to delete " + catName);
-                            final long catIdToRemove = itemId;
-                            adb.setNegativeButton("Cancel", null);
-                            adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String string =String.valueOf(catIdToRemove);
+                        Order o = checkExistingOrder(order.getItem(), order.getTable(), db);
+                        int qu = Integer.valueOf(o.getQuantity());
+                        qu -= 1;
+                        int sum = qu * Integer.valueOf(item.getPrice());
+                        ContentValues values = new ContentValues();
+                        values.put(OrderContract.OrderEntry.COLUMN_NAME_QUANTITY, qu);
+                        values.put(OrderContract.OrderEntry.COLUMN_NAME_SUM, sum);
+                        long newRowId;
+                        newRowId = db.update(
+                                OrderContract.OrderEntry.TABLE_NAME,
+                                values,
+                                "_id=" + o.getId(),
+                                null);
 
-                                    Order o = checkExistingOrder(order.getItem(),order.getTable(), db);
-                                    int qu = Integer.valueOf(o.getQuantity());
-                                    qu-=1;
-                                    int sum = qu * Integer.valueOf(item.getPrice());
-                                    ContentValues values = new ContentValues();
-                                    values.put(OrderContract.OrderEntry.COLUMN_NAME_QUANTITY, qu);
-                                    values.put(OrderContract.OrderEntry.COLUMN_NAME_SUM, sum);
-                                    long newRowId;
-                                    newRowId = db.update(
-                                            OrderContract.OrderEntry.TABLE_NAME,
-                                            values,
-                                            "_id="+o.getId(),
-                                            null);
+                        o = checkExistingOrder(order.getItem(), order.getTable(), db);
+                        if (Integer.valueOf(o.getQuantity()) == 0)
+                            db.execSQL("DELETE FROM " + OrderContract.OrderEntry.TABLE_NAME + " WHERE _id = '" + string + "'");
+                        orderAdapter.changeCursor(itemsPerTable());
+                        orderAdapter.notifyDataSetChanged();
+                        d.dismiss();
 
-                                   o = checkExistingOrder(order.getItem(),order.getTable(), db);
-                                    if (Integer.valueOf(o.getQuantity()) == 0)
-                                       db.execSQL("DELETE FROM "+ OrderContract.OrderEntry.TABLE_NAME +" WHERE _id = '" + string + "'");
-                                    orderAdapter.changeCursor(itemsPerTable());
-                                    orderAdapter.notifyDataSetChanged();
-                                    d.dismiss();
-                                }});
-                            adb.show();
-                        }
-                    });
-                    d.show();
+                    }
+                });
+
+                Button bd = (Button) d.findViewById(R.id.buttonDeleteCategory);
+                bd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder adb = new AlertDialog.Builder(con);
+                        adb.setTitle("Delete?");
+                        adb.setMessage("Are you sure you want to delete " + catName);
+                        final long catIdToRemove = itemId;
+                        adb.setNegativeButton("Cancel", null);
+                        adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String string = String.valueOf(catIdToRemove);
+
+                                Order o = checkExistingOrder(order.getItem(), order.getTable(), db);
+                                int qu = Integer.valueOf(o.getQuantity());
+                                qu -= 1;
+                                int sum = qu * Integer.valueOf(item.getPrice());
+                                ContentValues values = new ContentValues();
+                                values.put(OrderContract.OrderEntry.COLUMN_NAME_QUANTITY, qu);
+                                values.put(OrderContract.OrderEntry.COLUMN_NAME_SUM, sum);
+                                long newRowId;
+                                newRowId = db.update(
+                                        OrderContract.OrderEntry.TABLE_NAME,
+                                        values,
+                                        "_id=" + o.getId(),
+                                        null);
+
+                                o = checkExistingOrder(order.getItem(), order.getTable(), db);
+                                if (Integer.valueOf(o.getQuantity()) == 0)
+                                    db.execSQL("DELETE FROM " + OrderContract.OrderEntry.TABLE_NAME + " WHERE _id = '" + string + "'");
+                                orderAdapter.changeCursor(itemsPerTable());
+                                orderAdapter.notifyDataSetChanged();
+                                d.dismiss();
+                            }
+                        });
+                        adb.show();
+                    }
+                });
+                d.show();
             }
         });
 
@@ -147,30 +179,29 @@ public class TableActivity extends AppCompatActivity {
                 lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (choose ==1){
+                        if (choose == 1) {
                             categoryId = l;
                             categoryName = getCategory();
                             choose = 2;
                             subcat = dbWorkSub();
                             categoryAdapter.changeCursor(subcat);
-                            categoryAdapter.notifyDataSetChanged();}
-                        else if(choose ==2){
+                            categoryAdapter.notifyDataSetChanged();
+                        } else if (choose == 2) {
                             categoryId = l;
                             subCategoryName = getSubcategory();
                             choose = 3;
                             subcat = dbWorkItem();
                             categoryAdapter.changeCursor(subcat);
                             categoryAdapter.notifyDataSetChanged();
-                        }
-                        else{
+                        } else {
                             categoryId = l;
                             item = getItem(categoryId);
                             SQLiteDatabase db = oDbHelper.getWritableDatabase();
-                            if (checkExistingOrder(item.getName(), String.valueOf(table), db)!= null){
+                            if (checkExistingOrder(item.getName(), String.valueOf(table), db) != null) {
                                 Order o = checkExistingOrder(item.getName(), String.valueOf(table), db);
                                 int qu = Integer.valueOf(o.getQuantity());
-                                qu+=1;
-                                int sum = qu*(Integer.valueOf(item.getPrice()));
+                                qu += 1;
+                                int sum = qu * (Integer.valueOf(item.getPrice()));
                                 ContentValues values = new ContentValues();
                                 values.put(OrderContract.OrderEntry.COLUMN_NAME_QUANTITY, qu);
                                 values.put(OrderContract.OrderEntry.COLUMN_NAME_SUM, sum);
@@ -178,11 +209,11 @@ public class TableActivity extends AppCompatActivity {
                                 newRowId = db.update(
                                         OrderContract.OrderEntry.TABLE_NAME,
                                         values,
-                                        "_id="+o.getId(),
+                                        "_id=" + o.getId(),
                                         null);
                                 recreate();
 
-                            }else{
+                            } else {
                                 ContentValues values = new ContentValues();
                                 values.put(OrderContract.OrderEntry.COLUMN_NAME_ITEM, item.getName());
                                 values.put(OrderContract.OrderEntry.COLUMN_NAME_QUANTITY, String.valueOf(1));
@@ -198,7 +229,7 @@ public class TableActivity extends AppCompatActivity {
                             }
 
                         }
-                        }
+                    }
                 });
 
             }
@@ -206,7 +237,7 @@ public class TableActivity extends AppCompatActivity {
 
     }
 
-    private Order checkExistingOrder(String item, String table,SQLiteDatabase db) {
+    private Order checkExistingOrder(String item, String table, SQLiteDatabase db) {
         String[] projection = {
                 OrderContract.OrderEntry._ID,
                 OrderContract.OrderEntry.COLUMN_NAME_ITEM,
@@ -222,16 +253,16 @@ public class TableActivity extends AppCompatActivity {
         Cursor c = db.query(
                 OrderContract.OrderEntry.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
-                OrderContract.OrderEntry.COLUMN_NAME_ITEM +"=? AND "+ OrderContract.OrderEntry.COLUMN_NAME_TABLE+"=?",                                // The columns for the WHERE clause
-                new String[] {item,table},                            // The values for the WHERE clause
+                OrderContract.OrderEntry.COLUMN_NAME_ITEM + "=? AND " + OrderContract.OrderEntry.COLUMN_NAME_TABLE + "=?",                                // The columns for the WHERE clause
+                new String[]{item, table},                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 sortOrder                                 // The sort order
         );
-        if(c.moveToFirst()) {
-        Order order = new Order(c.getString(1), c.getString(4),c.getString(6), c.getString(3), c.getString(5), c.getString(2), c.getInt(0));
-        return order;}
-        else return null;
+        if (c.moveToFirst()) {
+            Order order = new Order(c.getString(1), c.getString(4), c.getString(6), c.getString(3), c.getString(5), c.getString(2), c.getInt(0));
+            return order;
+        } else return null;
     }
 
     private Cursor itemsPerTable() {
@@ -244,8 +275,8 @@ public class TableActivity extends AppCompatActivity {
                 OrderContract.OrderEntry.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
 //                null,
-                OrderContract.OrderEntry.COLUMN_NAME_TABLE+ " = ?",                                // The columns for the WHERE clause
-                new String[] { String.valueOf(table) },
+                OrderContract.OrderEntry.COLUMN_NAME_TABLE + " = ?",                                // The columns for the WHERE clause
+                new String[]{String.valueOf(table)},
                 null,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
@@ -283,8 +314,8 @@ public class TableActivity extends AppCompatActivity {
                 MenuContract.SubcategoryEntry.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
                 //null,
-                MenuContract.SubcategoryEntry.COLUMN_NAME_CATEGORY+ " = ?",                                // The columns for the WHERE clause
-                new String[] { String.valueOf(getCategory()) },
+                MenuContract.SubcategoryEntry.COLUMN_NAME_CATEGORY + " = ?",                                // The columns for the WHERE clause
+                new String[]{String.valueOf(getCategory())},
                 null,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
@@ -303,19 +334,20 @@ public class TableActivity extends AppCompatActivity {
                 MenuContract.CategoryEntry.TABLE_NAME,
                 projection,
                 MenuContract.CategoryEntry._ID + "=?",
-                new String[] { String.valueOf(categoryId) },
+                new String[]{String.valueOf(categoryId)},
                 null,
                 null,
                 null
         );
-        if(c.moveToFirst()){
+        if (c.moveToFirst()) {
             return c.getString(1);
         }
-        if (c !=null && !c.isClosed()){
+        if (c != null && !c.isClosed()) {
             c.close();
         }
         return null;
     }
+
     private String getSubcategory() {
         String[] projection = {
                 MenuContract.SubcategoryEntry._ID,
@@ -326,19 +358,20 @@ public class TableActivity extends AppCompatActivity {
                 MenuContract.SubcategoryEntry.TABLE_NAME,
                 projection,
                 MenuContract.SubcategoryEntry._ID + "=?",
-                new String[] { String.valueOf(categoryId) },
+                new String[]{String.valueOf(categoryId)},
                 null,
                 null,
                 null
         );
-        if(c.moveToFirst()){
+        if (c.moveToFirst()) {
             return c.getString(1);
         }
-        if (c !=null && !c.isClosed()){
+        if (c != null && !c.isClosed()) {
             c.close();
         }
         return null;
     }
+
     private Cursor dbWorkItem() {
         String[] projection = {
                 MenuContract.ItemEntry._ID,
@@ -350,8 +383,8 @@ public class TableActivity extends AppCompatActivity {
                 MenuContract.ItemEntry.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
                 //null,
-                MenuContract.ItemEntry.COLUMN_NAME_SUBCATEGORY+ " = ?",                                // The columns for the WHERE clause
-                new String[] { String.valueOf(subCategoryName) },
+                MenuContract.ItemEntry.COLUMN_NAME_SUBCATEGORY + " = ?",                                // The columns for the WHERE clause
+                new String[]{String.valueOf(subCategoryName)},
                 null,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
@@ -373,14 +406,14 @@ public class TableActivity extends AppCompatActivity {
         Cursor c = db.query(
                 MenuContract.ItemEntry.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
-                MenuContract.ItemEntry._ID +"=?",                                // The columns for the WHERE clause
-                new String[] {String.valueOf(id)},                            // The values for the WHERE clause
+                MenuContract.ItemEntry._ID + "=?",                                // The columns for the WHERE clause
+                new String[]{String.valueOf(id)},                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 sortOrder                                 // The sort order
         );
         c.moveToFirst();
-        Item item = new Item(c.getString(1), c.getString(2),c.getString(3));
+        Item item = new Item(c.getString(1), c.getString(2), c.getString(3));
         return item;
     }
 
@@ -398,14 +431,14 @@ public class TableActivity extends AppCompatActivity {
         Cursor c = db.query(
                 MenuContract.ItemEntry.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
-                MenuContract.ItemEntry.COLUMN_NAME_NAME +"=?",                                // The columns for the WHERE clause
-                new String[] {name},                            // The values for the WHERE clause
+                MenuContract.ItemEntry.COLUMN_NAME_NAME + "=?",                                // The columns for the WHERE clause
+                new String[]{name},                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 sortOrder                                 // The sort order
         );
         c.moveToFirst();
-        Item item = new Item(c.getString(1), c.getString(2),c.getString(3));
+        Item item = new Item(c.getString(1), c.getString(2), c.getString(3));
         return item;
     }
 
@@ -425,14 +458,14 @@ public class TableActivity extends AppCompatActivity {
         Cursor c = db.query(
                 OrderContract.OrderEntry.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
-                OrderContract.OrderEntry._ID +"=?",                                // The columns for the WHERE clause
-                new String[] {String.valueOf(id)},                            // The values for the WHERE clause
+                OrderContract.OrderEntry._ID + "=?",                                // The columns for the WHERE clause
+                new String[]{String.valueOf(id)},                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 sortOrder                                 // The sort order
         );
         c.moveToFirst();
-        Order order = new Order(c.getString(1), c.getString(4),c.getString(6), c.getString(3), c.getString(5), c.getString(2), c.getInt(0));
+        Order order = new Order(c.getString(1), c.getString(4), c.getString(6), c.getString(3), c.getString(5), c.getString(2), c.getInt(0));
         return order;
     }
 }
