@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -34,7 +35,7 @@ public class OrderFragment extends Fragment {
     UserReaderDbHelper mDbHelper;
     OrderReaderDbHelper oDbHelper;
     SQLiteDatabase db;
-    public ListView lvItems;
+    public GridView lvItems;
     public static User user;
 
     FloatingActionButton fab;
@@ -71,9 +72,9 @@ public class OrderFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_order, container, false);
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        lvItems = (ListView) rootView.findViewById(R.id.lvItems);
+        lvItems = (GridView) rootView.findViewById(R.id.lvItems);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.tables_array, android.R.layout.simple_list_item_1);
+                R.array.tables_array, R.layout.tables_list_item);
         lvItems.setAdapter(adapter);
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

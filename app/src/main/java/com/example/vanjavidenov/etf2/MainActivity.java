@@ -33,7 +33,7 @@ import com.example.vanjavidenov.etf2.UserContract.*;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -115,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
         Cursor c = db.query(
                 UserEntry.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
-                UserEntry.COLUMN_NAME_USERNAME + "=?",                                // The columns for the WHERE clause
-                new String[] {String.valueOf(query)},                            // The values for the WHERE clause
+                UserEntry.COLUMN_NAME_USERNAME + " like ?",                                // The columns for the WHERE clause
+                new String[] {"%"+String.valueOf(query)+"%"},                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 sortOrder                                 // The sort order
@@ -139,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setOnQueryTextListener(this);
+
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.search), new MenuItemCompat.OnActionExpandListener() {
@@ -166,12 +168,24 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
 
 
     /**

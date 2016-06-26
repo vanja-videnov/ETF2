@@ -7,11 +7,14 @@
     android:background="@color/colorBackgroundGray">
 
     <ListView
+        android:paddingTop="10dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="these are items"
         android:id="@+id/lvItems"
-        android:layout_below="@+id/item_subcategory_name"
+        android:layout_below="@+id/textView3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -40,6 +43,31 @@
         android:textAlignment="center"
         android:background="#000000"
         android:textColor="#ffffff" />
+
+    <TextView
+        android:padding="5sp"
+        android:id="@+id/textView3"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/item_subcategory_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="left" />
+    <TextView
+        android:padding="5sp"
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="price"
+        android:layout_marginLeft="30dp"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/item_subcategory_name"
+        android:layout_toRightOf="@+id/textView3"
+        android:layout_toEndOf="@+id/textView3"
+        android:gravity="center_horizontal" />
 
 </RelativeLayout>
 

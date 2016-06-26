@@ -102,7 +102,7 @@ public class ReportFragment extends Fragment {
                         d.setContentView(R.layout.dialog_pick_date);
 
                         d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                        d.setTitle(Html.fromHtml("<background color='#ffffff'>Select date</font>"));
+                        d.setTitle(Html.fromHtml("<font color='#ffffff'>Select date</font>"));
 
                         d.setCancelable(true);
                         DatePicker dp = (DatePicker) d.getWindow().findViewById(R.id.datePicker);

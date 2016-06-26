@@ -7,4 +7,9 @@
         android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
+    <item android:id="@+id/action_settings"
+        android:title="Logout"
+        android:icon="@android:drawable/ic_secure"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
 </menu>

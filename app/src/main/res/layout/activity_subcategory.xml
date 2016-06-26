@@ -7,10 +7,14 @@
     android:background="@color/colorBackgroundGray">
 
     <!-- TODO: Update blank fragment layout -->
-    <ListView
-        android:layout_width="wrap_content"
+    <GridView
+        android:numColumns="3"
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="these are subcategories"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
         android:id="@+id/lvItems"
         android:layout_below="@+id/subcategory_category_name"
         android:layout_alignParentLeft="true"

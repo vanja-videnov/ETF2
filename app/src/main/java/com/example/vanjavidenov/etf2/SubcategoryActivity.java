@@ -15,9 +15,11 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,7 +29,7 @@ public class SubcategoryActivity extends AppCompatActivity {
     Context con;
     MenuReaderDbHelper mDbHelper;
     SQLiteDatabase db;
-    public ListView lvItems;
+    public GridView lvItems;
     long categoryId;
     String categoryName;
 
@@ -48,7 +50,7 @@ public class SubcategoryActivity extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         final Cursor c = dbWork();
 
-        lvItems = (ListView) findViewById(R.id.lvItems);
+        lvItems = (GridView) findViewById(R.id.lvItems);
         categoryAdapter = new CategoryCursorAdapter(con, c, 3);
         lvItems.setAdapter(categoryAdapter);
 
@@ -62,7 +64,7 @@ public class SubcategoryActivity extends AppCompatActivity {
                 d.setContentView(R.layout.dialog_edit_category);
 
                 d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                d.setTitle(Html.fromHtml("<background color='#ffffff'>Edit subcategory</font>"));
+                d.setTitle(Html.fromHtml("<font color='#ffffff'>Edit subcategory</font>"));
 
                 d.setCancelable(true);
                 TextView v = (TextView)view.findViewById(R.id.category_name);
@@ -139,7 +141,7 @@ public class SubcategoryActivity extends AppCompatActivity {
                 d.setContentView(R.layout.dialog_add_category);
 
                 d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                d.setTitle(Html.fromHtml("<background color='#ffffff'>Add subcategory</font>"));
+                d.setTitle(Html.fromHtml("<font color='#ffffff'>Add subcategory</font>"));
 
                 d.setCancelable(true);
 
@@ -156,7 +158,7 @@ public class SubcategoryActivity extends AppCompatActivity {
                             d.setContentView(R.layout.dialog_error);
 
                             d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                            d.setTitle(Html.fromHtml("<background color='#ffffff'>Error</font>"));
+                            d.setTitle(Html.fromHtml("<font color='#ffffff'>Error</font>"));
 
                             d.setCancelable(true);
                             d.findViewById(R.id.button_error_ok).setOnClickListener(new View.OnClickListener() {
@@ -167,7 +169,14 @@ public class SubcategoryActivity extends AppCompatActivity {
                             });
 
                             d.show();
+                            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
+                            lp.copyFrom(d.getWindow().getAttributes());
+                            lp.width = 500;
+                            lp.height = 500;
+                            lp.x=-170;
+                            lp.y=100;
+                            d.getWindow().setAttributes(lp);
                         } else {
 
                             String name = edit.getText().toString();

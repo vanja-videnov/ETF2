@@ -8,6 +8,9 @@
 
     <!-- TODO: Update blank fragment layout -->
     <ListView
+        android:paddingTop="10dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="these are categories"
@@ -15,7 +18,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/fab" />
+        android:layout_above="@+id/fab"
+        android:nestedScrollingEnabled="false" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

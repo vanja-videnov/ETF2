@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ETF2</string>
+    <string name="app_name">IT Restaurant</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
@@ -17,5 +17,11 @@
         <item>table 4</item>
         <item>table 5</item>
         <item>table 6</item>
+        <item>table 7</item>
+        <item>table 8</item>
+        <item>table 9</item>
+        <item>table 10</item>
+        <item>table 11</item>
+        <item>table 12</item>
     </string-array>
 </resources>

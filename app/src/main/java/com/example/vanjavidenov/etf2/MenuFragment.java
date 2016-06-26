@@ -18,6 +18,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,7 +76,7 @@ public class MenuFragment extends Fragment {
                 d.setContentView(R.layout.dialog_add_category);
 
                 d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                d.setTitle(Html.fromHtml("<background color='#ffffff'>Add category</font>"));
+                d.setTitle(Html.fromHtml("<font color='#ffffff'>Add category</font>"));
 
                 d.setCancelable(true);
 
@@ -94,7 +95,7 @@ public class MenuFragment extends Fragment {
                             d.setContentView(R.layout.dialog_error);
 
                             d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                            d.setTitle(Html.fromHtml("<background color='#ffffff'>Error</font>"));
+                            d.setTitle(Html.fromHtml("<font color='#ffffff'>Error</font>"));
 
                             d.setCancelable(true);
                             d.findViewById(R.id.button_error_ok).setOnClickListener(new View.OnClickListener() {
@@ -105,7 +106,14 @@ public class MenuFragment extends Fragment {
                             });
 
                             d.show();
+                            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
+                            lp.copyFrom(d.getWindow().getAttributes());
+                            lp.width = 500;
+                            lp.height = 500;
+                            lp.x=-170;
+                            lp.y=100;
+                            d.getWindow().setAttributes(lp);
                         } else {
                             SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -140,7 +148,7 @@ public class MenuFragment extends Fragment {
                 d.setContentView(R.layout.dialog_edit_category);
 
                 d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                d.setTitle(Html.fromHtml("<background color='#ffffff'>Edit category</font>"));
+                d.setTitle(Html.fromHtml("<font color='#ffffff'>Edit category</font>"));
 
                 d.setCancelable(true);
                 TextView v = (TextView)view.findViewById(R.id.category_name);
@@ -164,7 +172,7 @@ public class MenuFragment extends Fragment {
                             d.setContentView(R.layout.dialog_error);
 
                             d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                            d.setTitle(Html.fromHtml("<background color='#ffffff'>Error</font>"));
+                            d.setTitle(Html.fromHtml("<font color='#ffffff'>Error</font>"));
 
                             d.setCancelable(true);
                             d.findViewById(R.id.button_error_ok).setOnClickListener(new View.OnClickListener() {
@@ -175,7 +183,14 @@ public class MenuFragment extends Fragment {
                             });
 
                             d.show();
+                            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
+                            lp.copyFrom(d.getWindow().getAttributes());
+                            lp.width = 500;
+                            lp.height = 500;
+                            lp.x=-170;
+                            lp.y=100;
+                            d.getWindow().setAttributes(lp);
                         } else {
                             ContentValues cv = new ContentValues();
                             cv.put(CategoryEntry.COLUMN_NAME_NAME, un);

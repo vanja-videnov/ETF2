@@ -18,6 +18,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,7 +81,7 @@ public class UserFragment extends Fragment {
                 d.setContentView(R.layout.dialog_add_user);
 
                 d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                d.setTitle(Html.fromHtml("<background color='#ffffff'>Add user</font>"));
+                d.setTitle(Html.fromHtml("<font color='#ffffff'>Add user</font>"));
 
                 d.setCancelable(true);
 
@@ -111,7 +112,7 @@ public class UserFragment extends Fragment {
                             d.setContentView(R.layout.dialog_error);
 
                             d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                            d.setTitle(Html.fromHtml("<background color='#ffffff'>Error</font>"));
+                            d.setTitle(Html.fromHtml("<font color='#ffffff'>Error</font>"));
 
                             d.setCancelable(true);
                             d.findViewById(R.id.button_error_ok).setOnClickListener(new View.OnClickListener() {
@@ -122,7 +123,14 @@ public class UserFragment extends Fragment {
                             });
 
                             d.show();
+                            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
+                            lp.copyFrom(d.getWindow().getAttributes());
+                            lp.width = 500;
+                            lp.height = 500;
+                            lp.x=-170;
+                            lp.y=100;
+                            d.getWindow().setAttributes(lp);
                         } else {
                             SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -161,7 +169,7 @@ public class UserFragment extends Fragment {
                 d.setContentView(R.layout.dialog_edit_user);
 
                 d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                d.setTitle(Html.fromHtml("<background color='#ffffff'>Edit user</font>"));
+                d.setTitle(Html.fromHtml("<font color='#ffffff'>Edit user</font>"));
 
 
                 d.setCancelable(true);
@@ -193,7 +201,7 @@ public class UserFragment extends Fragment {
                             d.setContentView(R.layout.dialog_error);
 
                             d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                            d.setTitle(Html.fromHtml("<background color='#ffffff'>Error</font>"));
+                            d.setTitle(Html.fromHtml("<font color='#ffffff'>Error</font>"));
 
                             d.setCancelable(true);
                             d.findViewById(R.id.button_error_ok).setOnClickListener(new View.OnClickListener() {
@@ -204,7 +212,14 @@ public class UserFragment extends Fragment {
                             });
 
                             d.show();
+                            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
+                            lp.copyFrom(d.getWindow().getAttributes());
+                            lp.width = 500;
+                            lp.height = 500;
+                            lp.x=-170;
+                            lp.y=100;
+                            d.getWindow().setAttributes(lp);
                         } else {
                             String isAdmin;
                             if (edit_admin.isChecked()) isAdmin = "admin";

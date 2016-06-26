@@ -14,6 +14,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -100,7 +101,7 @@ public class ProfileFragment extends Fragment {
                     d.setContentView(R.layout.dialog_error);
 
                     d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
-                    d.setTitle(Html.fromHtml("<background color='#ffffff'>Error</font>"));
+                    d.setTitle(Html.fromHtml("<font color='#409ffd'>Error!</font>"));
 
                     d.setCancelable(true);
                     d.findViewById(R.id.button_error_ok).setOnClickListener(new View.OnClickListener() {
@@ -111,7 +112,14 @@ public class ProfileFragment extends Fragment {
                     });
 
                     d.show();
+                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
+                    lp.copyFrom(d.getWindow().getAttributes());
+                    lp.width = 500;
+                    lp.height = 500;
+                    lp.x=-170;
+                    lp.y=100;
+                    d.getWindow().setAttributes(lp);
                 } else {
 
                     String string = user.getUsername();
