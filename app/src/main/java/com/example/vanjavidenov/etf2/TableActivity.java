@@ -129,7 +129,7 @@ public class TableActivity extends AppCompatActivity {
                             values.put(OrderContract.OrderEntry.COLUMN_NAME_QUANTITY, String.valueOf(1));
                             values.put(OrderContract.OrderEntry.COLUMN_NAME_SUM, item.getPrice());
                             values.put(OrderContract.OrderEntry.COLUMN_NAME_TABLE, String.valueOf(table));
-                            values.put(OrderContract.OrderEntry.COLUMN_NAME_TIME, String.valueOf(Calendar.getInstance().getTime().getDate()));
+                            values.put(OrderContract.OrderEntry.COLUMN_NAME_TIME, String.valueOf(Calendar.getInstance().getTime()));
                             long newRowId;
                             newRowId = db.insert(
                                     OrderContract.OrderEntry.TABLE_NAME,
@@ -324,7 +324,7 @@ public class TableActivity extends AppCompatActivity {
                                     values.put(OrderContract.OrderEntry.COLUMN_NAME_QUANTITY, String.valueOf(1));
                                     values.put(OrderContract.OrderEntry.COLUMN_NAME_SUM, item.getPrice());
                                     values.put(OrderContract.OrderEntry.COLUMN_NAME_TABLE, String.valueOf(table));
-                                    values.put(OrderContract.OrderEntry.COLUMN_NAME_TIME, String.valueOf(Calendar.getInstance().getTime().getDate()));
+                                    values.put(OrderContract.OrderEntry.COLUMN_NAME_TIME, String.valueOf(Calendar.getInstance().getTime()));
                                     long newRowId;
                                     newRowId = db.insert(
                                             OrderContract.OrderEntry.TABLE_NAME,
