@@ -30,8 +30,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="66dp"
-        android:layout_marginEnd="66dp"
-        android:layout_marginBottom="123dp" />
+        android:layout_marginRight="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="60dp" />
 
 </RelativeLayout>

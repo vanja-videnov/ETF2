@@ -134,11 +134,14 @@ public class LoginActivity extends AppCompatActivity {
             if (user!=null || (email.equals("admin") && password.equals("admin"))){
                 if(email.equals("admin") && password.equals("admin")){
                 Intent homepage = new Intent(this, MainActivity.class);
+                    finish();
                 startActivity(homepage);}
                 else{
                     Intent homepage = new Intent(this, WaiterActivity.class);
                     homepage.putExtra("user", user.getUsername());
-                    startActivity(homepage);}
+                    finish();
+                    startActivity(homepage);
+                }
                 }
             else {
                 mPasswordView.setError("Wrong password/username");
