@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.vanjavidenov.etf2.resources.Order;
 
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,6 +25,10 @@ public class ReportActivity extends AppCompatActivity {
     public ListView lvItems;
     Order order;
     Date date;
+    int selected;
+    int tableNumber;
+    String[] months;
+    Cursor c;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,26 +36,40 @@ public class ReportActivity extends AppCompatActivity {
         con = this ;
         mDbHelper = new OrderReaderDbHelper(con);
         db = mDbHelper.getReadableDatabase();
-        day = getIntent().getIntExtra("day", 2);
-        month = getIntent().getIntExtra("month", 2);
+        selected = getIntent().getIntExtra("selected", 1);
         TextView tv = (TextView) findViewById(R.id.report_date);
-        tv.setText(day+ ". " + month+ ".");
+        months = new String [] {"Januar", "Februar", "Mart","Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"};
+        switch (selected){
+            case 1:
+                day = getIntent().getIntExtra("day", 2);
+                month = getIntent().getIntExtra("month", 2);
+                tv.setText("Item count for date: " +day+ ". " + months[month-1]);
+                c = getOrdersPerDay();
+                break;
+            case 2:
+                tableNumber = getIntent().getIntExtra("tableNumber", 3);
+                tv.setText("Item count for table "+tableNumber);
+                c = getOrdersPerTable();
+                break;
+        }
+
+
 
         date = Calendar.getInstance().getTime();
         date.setDate(day);
         date.setMonth(month);
-        final Cursor c = getOrder();
+
 
         lvItems = (ListView) findViewById(R.id.list_reports);
         itemsAdapter = new OrderCursorAdapter(con, c, 3);
         lvItems.setAdapter(itemsAdapter);
     }
-    public Cursor getOrder() {
+
+    public Cursor getOrdersPerDay() {
         String[] projection = {
                 OrderContract.OrderEntry._ID,
                 OrderContract.OrderEntry.COLUMN_NAME_ITEM,
-                OrderContract.OrderEntry.COLUMN_NAME_QUANTITY
-                //"SUM("+OrderContract.OrderEntry.COLUMN_NAME_QUANTITY+")"
+                "sum("+OrderContract.OrderEntry.COLUMN_NAME_QUANTITY+") AS "+OrderContract.OrderEntry.COLUMN_NAME_QUANTITY
         };
 
         String sortOrder =
@@ -59,12 +78,35 @@ public class ReportActivity extends AppCompatActivity {
                 OrderContract.OrderEntry.TABLE_NAME,  // The table to query
                 projection,                               // The columns to return
                 OrderContract.OrderEntry.COLUMN_NAME_TIME + " like ?",                                // The columns for the WHERE clause
-                new String[]{"%"+"Jun 27"+"%"},                            // The values for the WHERE clause
-                null,//OrderContract.OrderEntry.COLUMN_NAME_ITEM,                                     // don't group the rows
+                new String[]{"%"+months[month-1]+" "+day+"%"},                            // The values for the WHERE clause
+                OrderContract.OrderEntry.COLUMN_NAME_ITEM,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 sortOrder                                 // The sort order
         );
         c.getCount();
         return c;
     }
+
+    public Cursor getOrdersPerTable() {
+        String[] projection = {
+                OrderContract.OrderEntry._ID,
+                OrderContract.OrderEntry.COLUMN_NAME_ITEM,
+                "sum("+OrderContract.OrderEntry.COLUMN_NAME_QUANTITY+") AS "+OrderContract.OrderEntry.COLUMN_NAME_QUANTITY
+        };
+
+
+        Cursor c = db.query(
+                OrderContract.OrderEntry.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                OrderContract.OrderEntry.COLUMN_NAME_TABLE+ "=?",                                // The columns for the WHERE clause
+                new String[]{String.valueOf(tableNumber)},                            // The values for the WHERE clause
+                OrderContract.OrderEntry.COLUMN_NAME_ITEM,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null,                                 // The sort order
+                null
+        );
+        c.getCount();
+        return c;
+    }
 }
+

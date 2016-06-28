@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -33,6 +34,8 @@ public class ReportFragment extends Fragment {
     SQLiteDatabase db;
     public ListView lvItems;
     public int selected;
+    DatePicker dp;
+     Dialog d;
 
     FloatingActionButton fab;
 
@@ -80,9 +83,6 @@ public class ReportFragment extends Fragment {
                     case 1:
                         selected = 2;
                         break;
-                    case 2:
-                        selected = 3;
-                        break;
                 }
             }
 
@@ -97,7 +97,7 @@ public class ReportFragment extends Fragment {
             public void onClick(View view) {
                 switch (selected){
                     case 1:
-                        final Dialog d = new Dialog(con);
+                        d = new Dialog(con);
 
                         d.setContentView(R.layout.dialog_pick_date);
 
@@ -105,15 +105,17 @@ public class ReportFragment extends Fragment {
                         d.setTitle(Html.fromHtml("<font color='#ffffff'>Select date</font>"));
 
                         d.setCancelable(true);
-                        DatePicker dp = (DatePicker) d.getWindow().findViewById(R.id.datePicker);
-                        final int day = dp.getDayOfMonth();
-                        final int month = dp.getMonth();
+                         dp = (DatePicker) d.getWindow().findViewById(R.id.datePicker);
+
                         d.findViewById(R.id.button_report_date_ok).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(getActivity(), ReportActivity.class);
+                                final int day = dp.getDayOfMonth();
+                                final int month = dp.getMonth();
                                 intent.putExtra("day", day);
                                 intent.putExtra("month", month);
+                                intent.putExtra("selected", selected);
                                 d.dismiss();
                                 startActivity(intent);
                             }
@@ -122,8 +124,27 @@ public class ReportFragment extends Fragment {
                         d.show();
                         break;
                     case 2:
-                        break;
-                    case 3:
+                        d = new Dialog(con);
+
+                        d.setContentView(R.layout.fragment_order);
+                        GridView gv = (GridView) d.getWindow().findViewById(R.id.lvItems);
+                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                                R.array.tables_array, R.layout.tables_list_item);
+                        gv.setAdapter(adapter);
+                        d.getWindow().setBackgroundDrawableResource(R.color.colorBackgroundGray);
+                        d.setTitle(Html.fromHtml("<font color='#ffffff'>Select table</font>"));
+
+                        d.setCancelable(true);
+                        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                                Intent intent = new Intent(getActivity(), ReportActivity.class);
+                                intent.putExtra("tableNumber", pos+1);
+                                intent.putExtra("selected", selected);
+                                d.dismiss();
+                                startActivity(intent);
+                            }});
+                        d.show();
                         break;
                 }
             }
