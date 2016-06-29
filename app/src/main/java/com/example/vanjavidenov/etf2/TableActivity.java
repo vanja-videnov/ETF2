@@ -143,10 +143,10 @@ public class TableActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             string = String.valueOf(orderItemId);
                             Order.updateOrderMinus(order, item, db);
-
                             Order o = Order.checkExistingOrder(order.getItem(), order.getTable(), db);
                             checkQuantity(o);
                             changeCursorForOrderAdapter(Order.getTableItems(db, table), orderAdapter);
+                            textViewTableSum.setText("SUM: "+Order.getTableSum(db,table));
                             d.dismiss();
 
                         }
@@ -164,10 +164,10 @@ public class TableActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     string = String.valueOf(orderItemId);
                                     Order.updateOrderMinus(order, item, db);
-
                                     Order o = Order.checkExistingOrder(order.getItem(), order.getTable(), db);
                                     checkQuantity(o);
                                     changeCursorForOrderAdapter(Order.getTableItems(db, table), orderAdapter);
+                                    textViewTableSum.setText("SUM: "+Order.getTableSum(db,table));
                                     d.dismiss();
                                 }
                             });

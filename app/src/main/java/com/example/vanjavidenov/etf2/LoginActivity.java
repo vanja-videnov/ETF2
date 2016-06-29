@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
             // perform the user login attempt.
             user = findUser(email,password);
             if (user!=null || (email.equals("admin") && password.equals("admin"))){
-                if(email.equals("admin") && password.equals("admin")){
+                if((email.equals("admin") && password.equals("admin"))||user.getAdmin().equals("admin")){
                 Intent homepage = new Intent(this, MainActivity.class);
                     finish();
                 startActivity(homepage);}
@@ -159,7 +159,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 3;
     }
 
     public User findUser(String username, String password) {

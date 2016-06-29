@@ -91,9 +91,8 @@ public class UserFragment extends Fragment {
                 final EditText edit_phone = (EditText) d.findViewById(R.id.editPhone);
                 final RadioButton edit_admin = (RadioButton) d.findViewById(R.id.radio_admin);
                 final RadioButton edit_waiter = (RadioButton) d.findViewById(R.id.radio_waiter);
-                final String selected_admin_radio;
-                if (edit_admin.isChecked() ) selected_admin_radio = "admin";
-                else selected_admin_radio = "waiter";
+
+
 
                 Button b = (Button) d.findViewById(R.id.buttonSaveUser);
 
@@ -101,10 +100,13 @@ public class UserFragment extends Fragment {
 
                     public void onClick(View v) {
 
+                        final String selected_admin_radio;
                         String username = edit_name.getText().toString();
                         String password = edit_pass.getText().toString();
                         String email = edit_email.getText().toString();
                         String phone = edit_phone.getText().toString();
+                        if (edit_admin.isChecked() ) selected_admin_radio = "admin";
+                        else selected_admin_radio = "waiter";
 
                         if (username.trim().equals("") || password.trim().equals("") || email.trim().equals("") || phone.trim().equals("")) {
                             final Dialog d = new Dialog(con);
